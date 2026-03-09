@@ -1,5 +1,6 @@
 import os
 import json
+from dataclasses import dataclass
 
 from fred.dao.service.catalog import ServiceCatalog
 from fred.worker.interface import HandlerInterface
@@ -30,7 +31,7 @@ class HandlerSocialMediaSync(HandlerInterface):
             )
         output_filepath = out.sync_compressed_filepath
         if not os.path.exists(output_filepath):
-            error_msg = f"Output file does not exists: {output_filepath}"
+            error_msg = f"Output file does not exist: {output_filepath}"
             logger.error(error_msg)
             return {
                 "ok": False,
@@ -54,7 +55,7 @@ class HandlerSocialMediaSync(HandlerInterface):
                     logger.warning(f"Creating bucket: {minio_bucket}")
                     minio_service.client.make_bucket(minio_bucket)
                 # Upload main snapshot (zip) into MinIO
-                logger.info("Register the main snapshot for user {out.username} in MinIO...")
+                logger.info(f"Register the main snapshot for user {out.username} in MinIO...")
                 minio_service.client.fput_object(
                     bucket_name=minio_bucket,
                     object_name=os.path.join(
@@ -65,7 +66,7 @@ class HandlerSocialMediaSync(HandlerInterface):
                     file_path=out.sync_compressed_filepath,
                 )
                 username_dirpath = out.username_dirpath
-                logger.info("Register the individual assets for user {out.username} in MinIO...")
+                logger.info(f"Register the individual assets for user {out.username} in MinIO...")
                 for image_filename in os.listdir(username_dirpath):
                     if not image_filename.endswith(".jpg"):
                         continue
@@ -74,7 +75,7 @@ class HandlerSocialMediaSync(HandlerInterface):
                     yyyy, mm, dd, *_ = image_filename.split("-")
                     meta_filepath = os.path.join(username_dirpath, f"{prefix}UTC.json")
                     if not os.path.exists(meta_filepath):
-                        logger.warning(f"Meta file does not exists for image: {image_filepath}")
+                        logger.warning(f"Meta file does not exist for image: {image_filepath}")
                         continue
                     with open(meta_filepath, "r") as mh:
                         content = mh.read()
@@ -96,7 +97,7 @@ class HandlerSocialMediaSync(HandlerInterface):
             "ok": True,
             "output": {
                 "username": out.username,
-                "filename": out.filename,
+                "filename": out.sync_compressed_filename,
                 "run_id": out.run_id,
                 "run_at": out.run_at,
             }
