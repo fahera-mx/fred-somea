@@ -51,11 +51,16 @@ class SyncInterface:
             return cls._auto(**kwargs)  # type: ignore[attr-defined]
         raise NotImplementedError
 
-    def sync(self, **kwargs) -> SyncOutput:
+    def sync(
+            self,
+            disable_zip: bool = False,
+            **kwargs
+    ) -> SyncOutput:
         if getattr(self, "_sync", None):
             out = self._sync(**kwargs)  # type: ignore[attr-defined]
-            out.precheck()
-            out.zip()
+            if not disable_zip:
+                out.precheck()
+                out.zip()
             return out
         raise NotImplementedError
 
