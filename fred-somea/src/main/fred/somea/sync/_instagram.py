@@ -34,7 +34,7 @@ class SyncInstagram(SyncInterface):
     def _auto(
         cls,
         username: str,
-        output_dirpath: str = None,
+        output_dirpath: Optional[str] = None,
         include_videos: bool = False,
         compress_json: bool = False,
         **instaloader_configs
@@ -74,7 +74,7 @@ class SyncInstagram(SyncInterface):
         **kwargs,
     ) -> SyncOutput:
         self.instaloader.download_profiles(
-            profiles=(self.profile, ),
+            profiles={self.profile, },
             profile_pic=not exclude_profile_pic,
             posts=not exclude_posts,
             tagged=include_tagged,

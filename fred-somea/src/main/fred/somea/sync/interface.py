@@ -48,12 +48,12 @@ class SyncInterface:
     @classmethod
     def auto(cls, **kwargs) -> 'SyncInterface':
         if getattr(cls, "_auto", None):
-            return cls._auto(**kwargs)
+            return cls._auto(**kwargs)  # type: ignore[attr-defined]
         raise NotImplementedError
 
     def sync(self, **kwargs) -> SyncOutput:
         if getattr(self, "_sync", None):
-            out = self._sync(**kwargs)
+            out = self._sync(**kwargs)  # type: ignore[attr-defined]
             out.precheck()
             out.zip()
             return out
