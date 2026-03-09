@@ -2,3 +2,5 @@
 fred-oss==0.66.0
 # Streamlit dependencies
 streamlit==1.49.1
+# Social media dependencies
+instaloader==4.15
