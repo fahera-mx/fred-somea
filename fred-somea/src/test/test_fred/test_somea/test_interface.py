@@ -127,7 +127,10 @@ class TestSyncOutputZip:
         out = _make_output(tmp_path, username="u")
         call_order = []
         with patch.object(SyncOutput, "precheck", side_effect=lambda: call_order.append("precheck")):
-            with patch("fred.somea.utils.misc.zip_directory", side_effect=lambda **kw: call_order.append("zip") or Path("x.zip")):
+            def _zip_side_effect(**kw):
+                call_order.append("zip")
+                return Path("x.zip")
+            with patch("fred.somea.utils.misc.zip_directory", side_effect=_zip_side_effect):
                 out.zip()
         assert call_order == ["precheck", "zip"]
 
