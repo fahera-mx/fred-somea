@@ -74,7 +74,7 @@ class HandlerSocialMediaSync(HandlerInterface):
                     yyyy, mm, dd, *_ = image_filename.split("-")
                     meta_filepath = os.path.join(username_dirpath, f"{prefix}UTC.json")
                     if not os.path.exists(meta_filepath):
-                        logger.warning(f"Meta file does not exists for image: {image_filepath}")
+                        logger.warning(f"Meta file does not exist for image: {image_filepath}")
                         continue
                     with open(meta_filepath, "r") as mh:
                         content = mh.read()
