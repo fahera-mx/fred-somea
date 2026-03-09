@@ -89,5 +89,5 @@ class SyncInstagram(SyncInterface):
         return SyncOutput(
             username=self.username,
             output_dirpath=self.output_dirpath,
-            # TODO: Add ref_min_dt & ref_max_dt
+            # TODO: Eventually add ref_min_dt & ref_max_dt
         )
