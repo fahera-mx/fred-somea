@@ -6,8 +6,11 @@ from instaloader import Instaloader
 from instaloader.instaloadercontext import InstaloaderContext
 from instaloader.structures import Profile
 
+from fred.settings import logger_manager
 from fred.somea.sync.interface import SyncInterface, SyncOutput
 from fred.somea.settings import SOMEA_DIRNAME
+
+logger = logger_manager.get_logger(__name__)
 
 
 @dataclass
@@ -70,22 +73,28 @@ class SyncInstagram(SyncInterface):
         disable_fast_update: bool = False,
         # Number of items downloaded is variable
         max_count: Optional[int] = None,
-        # Additiona kwargs arguments
+        # Additiona arguments
+        raise_if_error: bool = False,
         **kwargs,
     ) -> SyncOutput:
-        self.instaloader.download_profiles(
-            profiles={self.profile, },
-            profile_pic=not exclude_profile_pic,
-            posts=not exclude_posts,
-            tagged=include_tagged,
-            igtv=include_igtv,
-            highlights=include_highlights,
-            stories=include_stories,
-            fast_update=not disable_fast_update,
-            reels=include_reels,
-            max_count=max_count,
-            **kwargs,
-        )
+        try:
+            self.instaloader.download_profiles(
+                profiles={self.profile, },
+                profile_pic=not exclude_profile_pic,
+                posts=not exclude_posts,
+                tagged=include_tagged,
+                igtv=include_igtv,
+                highlights=include_highlights,
+                stories=include_stories,
+                fast_update=not disable_fast_update,
+                reels=include_reels,
+                max_count=max_count,
+                **kwargs,
+            )
+        except Exception as e:
+            logger.error("Error while processing profile {self.profile}: {e}")
+            if raise_if_error:
+                raise
         return SyncOutput(
             username=self.username,
             output_dirpath=self.output_dirpath,
