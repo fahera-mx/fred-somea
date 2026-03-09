@@ -32,7 +32,7 @@ class SyncOutput:
             raise FileNotFoundError(f"Output directory not found: {self.output_dirpath}")
         if not os.path.exists(self.username_dirpath):
             raise FileNotFoundError(f"Output directory not found: {self.username_dirpath}")
-    
+
     def zip(self) -> str:
         from fred.somea.utils.misc import zip_directory
         self.precheck()
@@ -44,7 +44,7 @@ class SyncOutput:
 
 
 class SyncInterface:
-    
+
     @classmethod
     def auto(cls, **kwargs) -> 'SyncInterface':
         if getattr(cls, "_auto", None):
